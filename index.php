@@ -57,5 +57,14 @@ $GLOBALS[LOCALE][EN][LOGIN_BUTTON] = 'Log in';
 $GLOBALS[LOCALE][RU][LOGOUT] = 'Выйти';
 $GLOBALS[LOCALE][EN][LOGOUT] = 'Log out';
 $GLOBALS[LANG] = strtoupper(substr($_SERVER[HTTP_ACCEPT_LANGUAGE],0,2)) == 'EN'?'EN':'RU';
+if(strlen($_GET['lang'])==2&&($_GET['lang'] == 'EN'||$_GET['lang'] == 'RU'))
+{
+  setcookie('lang',$_GET['lang']);
+  $GLOBALS[LANG] = $_GET['lang'];
+}
+elseif(strlen($COOKIE['lang'])==2&&($COOKIE['lang'] == 'EN'||$COOKIE['lang'] == 'RU'))
+{
+  $GLOBALS[LANG] = $COOKIE['lang'];
+}
 ob_flush();
 ?>
