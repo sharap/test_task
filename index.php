@@ -66,5 +66,10 @@ elseif(strlen($_COOKIE['lang'])==2&&($_COOKIE['lang'] == 'EN'||$_COOKIE['lang'] 
 {
   $GLOBALS[LANG] = $_COOKIE['lang'];
 }
+function htmlPage($title,$body)
+{
+  $css = '';
+  return '<HTML><HEAD><TITLE>'.htmlspecialchars($title).'</TITLE><STYLE>'.$css.'</STYLE></HEAD><BODY>'.$body.'</BODY></HTML>';
+}
 ob_flush();
 ?>
