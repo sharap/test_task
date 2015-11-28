@@ -62,9 +62,9 @@ if(strlen($_GET['lang'])==2&&($_GET['lang'] == 'EN'||$_GET['lang'] == 'RU'))
   setcookie('lang',$_GET['lang']);
   $GLOBALS[LANG] = $_GET['lang'];
 }
-elseif(strlen($COOKIE['lang'])==2&&($COOKIE['lang'] == 'EN'||$COOKIE['lang'] == 'RU'))
+elseif(strlen($_COOKIE['lang'])==2&&($_COOKIE['lang'] == 'EN'||$_COOKIE['lang'] == 'RU'))
 {
-  $GLOBALS[LANG] = $COOKIE['lang'];
+  $GLOBALS[LANG] = $_COOKIE['lang'];
 }
 ob_flush();
 ?>
