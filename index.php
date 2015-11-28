@@ -56,5 +56,6 @@ $GLOBALS[LOCALE][RU][LOGIN_BUTTON] = 'Войти';
 $GLOBALS[LOCALE][EN][LOGIN_BUTTON] = 'Log in';
 $GLOBALS[LOCALE][RU][LOGOUT] = 'Выйти';
 $GLOBALS[LOCALE][EN][LOGOUT] = 'Log out';
+$GLOBALS[LANG] = strtoupper(substr($_SERVER[HTTP_ACCEPT_LANGUAGE],0,2)) == 'EN'?'EN':'RU';
 ob_flush();
 ?>
