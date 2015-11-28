@@ -2,9 +2,11 @@
 ob_start();
 $GLOBALS[LOCALE][EN][SIGNUP_TITLE] = 'Registration';
 $GLOBALS[LOCALE][RU][SIGNUP_TITLE] = 'Регистрация';
+$GLOBALS[LOCALE][RU][SIGNUP_BUTTON] = 'Зарегистрироваться';
+$GLOBALS[LOCALE][EN][SIGNUP_BUTTON] = 'Sign up';
 $GLOBALS[LOCALE][EN][SIGNUP] = 'Please input your data for next step registration:';
 $GLOBALS[LOCALE][RU][SIGNUP] = 'Пожалуйста, введите свои регистрационные данные:';
-$GLOBALS[LOCALE][RU][NAME] = 'ФИО:';
+$GLOBALS[LOCALE][RU][NAME] = 'ФИО полностью:';
 $GLOBALS[LOCALE][EN][NAME] = 'Full name:';
 $GLOBALS[LOCALE][RU][DATE_BORN] = 'Дата рождения:';
 $GLOBALS[LOCALE][EN][DATE_BORN] = 'Date born:';
@@ -75,6 +77,34 @@ function form($title,$action,$body,$submit)
 {
   $action = $action=='signup'?'signup':'login';
   return '<FORM action="index.php" method="post"><TABLE><TR><TD colspan="2">'.htmlspecialchars($title).'</TD></TR>'.$body.'<TR><TD colspan="2"><INPUT type="hidden" name="action" value="'.$action.'"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
+}
+function signUpForm()
+{
+  $body = '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][NAME].'</TD><TD><INPUT type="text" name="name"></TD></TR>';
+  for($i = 1;$i <= 31;$i++)
+  {
+    $day.='<OPTION value="'.$i.'">'.$i.'</OPTION>';
+  }
+  for($i = 1;$i <= 12;$i++)
+  {
+    $month.='<OPTION value="'.$i.'">'.$GLOBALS[LOCALE][$GLOBALS[LANG]][MONTH][$i].'</OPTION>';
+  }
+  for($i = date('Y');$i >= date('Y')-150;$i--)
+  {
+    $year.='<OPTION value="'.$i.'">'.$i.'</OPTION>';
+  }
+  $body.='<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DATE_BORN].'</TD><TD><SELECT name="day">'.$day.'</SELECT><SELECT name="month">'.$month.'</SELECT><SELECT name="year">'.$year.'</SELECT></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][LOCATION].'</TD><TD><INPUT type="text" name="location"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][LOCATION].'</TD><TD><INPUT type="text" name="location"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][STATUS].'</TD><TD><INPUT type="text" name="status"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EDUCATION].'</TD><TD><INPUT type="text" name="education"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EXPIRIENCE].'</TD><TD><INPUT type="text" name="expirience"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EMAIL].'</TD><TD><INPUT type="text" name="email"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PHONE].'</TD><TD><INPUT type="text" name=phone"></TD></TR>';
+  $body.= '<TR><TD colspan="2">'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DESCRIPTION].'<BR><TEXTAREA name="location"></TEXTAREA></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD_VERIFY].'</TD><TD><INPUT type="password" name="password_verify"></TD></TR>';
+  return form($GLOBALS[$GLOBALS[LANG]][SIGNUP_TITLE],$GLOBALS[$GLOBALS[LANG]][SIGNUP],$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_BUTTON]);
 }
 ob_flush();
 ?>
