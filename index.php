@@ -71,5 +71,10 @@ function htmlPage($title,$body)
   $css = '';
   return '<HTML><HEAD><TITLE>'.htmlspecialchars($title).'</TITLE><STYLE>'.$css.'</STYLE></HEAD><BODY>'.$body.'</BODY></HTML>';
 }
+function form($title,$action,$body,$submit)
+{
+  $action = $action=='signup'?'signup':'login';
+  return '<FORM action="index.php" method="post"><TABLE><TR><TD colspan="2">'.htmlspecialchars($title).'</TD></TR>'.$body.'<TR><TD colspan="2"><INPUT type="hidden" name="action" value="'.$action.'"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
+}
 ob_flush();
 ?>
