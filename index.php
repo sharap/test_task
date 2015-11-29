@@ -109,7 +109,7 @@ function form($title,$action,$body,$submit)
 function field($name,$password=false)
 {
   if($_COOKIE[$name]=='~error') setcookie($name,null,0);
-  return '<TR'.($_COOKIE[$name]=='~error'?' class="error"':'').'><TD>'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][strtoupper($name)]).'</TD><TD><INPUT type="'.($password?'password':'text').'" name="'.htmlspecialchars($name).'"'.(($_COOKIE[$name]!='~error'&&strlen($_COOKIE[$name])>0)?' value="'.htmlspecialchars($_COOKIE[$name]).'"':'').'></TD></TR>';
+  return '<TR'.(substr($_COOKIE[$name],0,1)=='~'?' class="error"':'').'><TD>'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][strtoupper($name)]).'</TD><TD><INPUT type="'.($password?'password':'text').'" name="'.htmlspecialchars($name).'"'.((substr($_COOKIE[$name],0,1)!='~'&&strlen($_COOKIE[$name])>0)?' value="'.htmlspecialchars($_COOKIE[$name]).'"':((substr($_COOKIE[$name],0,1)=='~'&&$_COOKIE[$name]!='~error'&&strlen($_COOKIE[$name])>1)?('title="'.htmlspecialchars(substr($_COOKIE[$name],1)).'" placeholder="'.htmlspecialchars(substr($_COOKIE[$name],1)).'"'):'')).'></TD></TR>';
 }
 function signUpForm()
 {
@@ -187,7 +187,8 @@ function genAid()
 }
 function anketa($name,$date_born,$location,$status,$education,$expirience,$phone,$email,$description,$lang)
 {
-  function show($name,$value,$lang) {
+  function show($name,$value,$lang)
+  {
     return strlen($value)>0?('<TR><TD class="left">'.htmlspecialchars($GLOBALS[LOCALE][$lang][strtoupper($name)]).'</TD><TD class="right">'.htmlspecialchars($value).'</TD></TR>'):'';
   }
   $body = '<TABLE>';
@@ -266,7 +267,7 @@ function signUp($mysql,$name,$day,$month,$year,$location,$status,$education,$exp
       if(mysql_num_rows($mail)>0)
       {
         $verify = false;
-        $setcookie('email',$GLOBALS[LOCALE][$lang][EXIST_EMAIL]);
+        setcookie('email','~'.$GLOBALS[LOCALE][$lang][EXIST_EMAIL]);
       } else
       {
         setcookie('email',$email);
@@ -288,6 +289,10 @@ function signUp($mysql,$name,$day,$month,$year,$location,$status,$education,$exp
     {
       setcookie('verify_password',$verify_password);
     }
+    setcookie('status',$status);
+    setcookie('description',$description);
+    setcookie('education',$education);
+    setcookie('expirience',$expirience);
     if($verify)
     {
       setcookie('name',null,0);
@@ -348,7 +353,8 @@ function logIn($mysql,$email,$password)
       mysql_query('update users set aid="'.mysql_real_escape_string($aid).'" where uid='.intval($profile[uid]));
       setcookie('uid','id'.$profile[uid],$GLOBALS[STIME]);
       setcookie('aid',$aid,$GLOBALS[STIME]);
-    } else {
+    } else
+    {
       $verify = false;
     }
   }
@@ -360,7 +366,7 @@ if($db!=false)
   $view = false;
   if(intval(substr($_COOKIE['uid'],2))>0&&strlen(mysql_real_escape_string($_COOKIE['aid']))>=10)
   {
-    mysql_query('update users set last_time='.time().(($_GET[lang]=='RU'||$_GET[lang]=='EN')?',lang="'.$_GET[lang].'"':'').' where uid='.intval(substr($_COOKIE['uid'],2)).' and aid="'.mysql_real_escape_string($_COOKIE['aid']).'"',$db);
+    mysql_query('update users set last_time='.time().(($_GET[lang]=='RU'||$_GET[lang]=='EN')?',lang="'.$_GET[lang].'"':'').'" where uid='.intval(substr($_COOKIE['uid'],2)).' and aid="'.mysql_real_escape_string($_COOKIE['aid']).'"',$db);
     $profile = mysql_query('select * from users where uid='.intval(substr($_COOKIE['uid'],2)).' and aid="'.mysql_real_escape_string($_COOKIE['aid']).'"',$db);
     if(mysql_num_rows($profile)==1&&$_GET['action']!='exit')
     {
@@ -401,7 +407,8 @@ if($db!=false)
         }
         break;
       case('login'):
-        if(logIn($db,$_POST[email],$_POST[password])) {
+        if(logIn($db,$_POST[email],$_POST[password]))
+        {
           header('Location: index.php');
         } else
         {
