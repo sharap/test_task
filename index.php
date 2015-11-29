@@ -26,6 +26,8 @@ $GLOBALS[LOCALE][RU][EMAIL] = 'Адрес электронной почты (E-m
 $GLOBALS[LOCALE][EN][EMAIL] = 'E-mail:';
 $GLOBALS[LOCALE][RU][EXIST_EMAIL] = 'Эта электронная почта уже используется';
 $GLOBALS[LOCALE][EN][EXIST_EMAIL] = 'This email is already taken';
+$GLOBALS[LOCALE][RU][EXIST_PHONE] = 'Этот номер телефона уже используется';
+$GLOBALS[LOCALE][EN][EXIST_PHONE] = 'This phone number is already taken';
 $GLOBALS[LOCALE][RU][PHONE] = 'Номер телефона:';
 $GLOBALS[LOCALE][EN][PHONE] = 'Phone number:';
 $GLOBALS[LOCALE][RU][DESCRIPTION] = 'Немного о себе:';
@@ -108,8 +110,8 @@ function form($title,$action,$body,$submit)
 }
 function field($name,$password=false)
 {
-  if($_COOKIE[$name]=='~error') setcookie($name,null,0);
-  return '<TR'.(substr($_COOKIE[$name],0,1)=='~'?' class="error"':'').'><TD>'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][strtoupper($name)]).'</TD><TD><INPUT type="'.($password?'password':'text').'" name="'.htmlspecialchars($name).'"'.((substr($_COOKIE[$name],0,1)!='~'&&strlen($_COOKIE[$name])>0)?' value="'.htmlspecialchars($_COOKIE[$name]).'"':((substr($_COOKIE[$name],0,1)=='~'&&$_COOKIE[$name]!='~error'&&strlen($_COOKIE[$name])>1)?('title="'.htmlspecialchars(substr($_COOKIE[$name],1)).'" placeholder="'.htmlspecialchars(substr($_COOKIE[$name],1)).'"'):'')).'></TD></TR>';
+  if(substr($_COOKIE[$name],0,1)=='~') setcookie($name,null,0);
+  return '<TR'.(substr($_COOKIE[$name],0,1)=='~'?' class="error"':'').((substr($_COOKIE[$name],0,1)=='~'&&$_COOKIE[$name]!='~error'&&strlen($_COOKIE[$name])>1)?'title="'.htmlspecialchars(substr($_COOKIE[$name],1)).'"':'').'><TD>'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][strtoupper($name)]).'</TD><TD><INPUT type="'.($password?'password':'text').'" name="'.htmlspecialchars($name).'"'.((substr($_COOKIE[$name],0,1)!='~'&&strlen($_COOKIE[$name])>0)?' value="'.htmlspecialchars($_COOKIE[$name]).'"':((substr($_COOKIE[$name],0,1)=='~'&&$_COOKIE[$name]!='~error'&&strlen($_COOKIE[$name])>1)?('placeholder="'.htmlspecialchars(substr($_COOKIE[$name],1)).'"'):'')).'></TD></TR>';
 }
 function signUpForm()
 {
@@ -255,7 +257,15 @@ function signUp($mysql,$name,$day,$month,$year,$location,$status,$education,$exp
       setcookie('phone','~error');
     } else
     {
-      setcookie('phone',$phone);
+      $iphone = mysql_query('select phone from users where phone="'.mysql_real_escape_string($phone).'"',$mysql);
+      if(mysql_num_rows($iphone)>0&&strlen($iphone)>0)
+      {
+        $verify = false;
+        setcookie('phone','~'.$GLOBALS[LOCALE][$lang][EXIST_PHONE]);
+      } else
+      {
+        setcookie('phone',$phone);
+      }
     }
     if(!eregi('^[a-z_]+[a-z0-9\-_\.]{1,62}[@]+[a-z_]+[a-z0-9\-_\.]{1,48}[\.]+[a-z]{2,16}$',$email))
     {
@@ -421,7 +431,7 @@ if($db!=false)
 {
   $page = errorServer();
 }
+ob_clean();
 print(htmlPage($title,$page));
-print_r($_COOKIE);
-ob_flush();
+ob_end_flush();
 ?>
