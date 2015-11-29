@@ -1,5 +1,7 @@
 <?PHP
 ob_start();
+$db = mysql_connect('localhost','simple','simple');
+mysql_select_db('simple',$db);
 $GLOBALS[LOCALE][EN][SIGNUP_TITLE] = 'Registration';
 $GLOBALS[LOCALE][RU][SIGNUP_TITLE] = 'Регистрация';
 $GLOBALS[LOCALE][RU][SIGNUP_BUTTON] = 'Зарегистрироваться';
@@ -72,14 +74,22 @@ elseif(strlen($_COOKIE['lang'])==2&&($_COOKIE['lang'] == 'EN'||$_COOKIE['lang'] 
 }
 function htmlPage($title,$body)
 {
-  $css = '';
-  return '<HTML><HEAD><TITLE>'.htmlspecialchars($title).'</TITLE><STYLE>'.$css.'</STYLE></HEAD><BODY>'.$body.'</BODY></HTML>';
+  $css.='body{background-color: #929292;}';
+  $css.=' #body{display: inline-block;background-color: #DBDBDB;}';
+  $css.=' #container{text-align: center;width: 100%;height: 100%;}';
+  $css.=' textarea{width: 100%;resize: vertical;}';
+  $css.=' input[type="submit"]{width: 100%;}';
+  $css.=' #tab a{display: table-cell;width: 50%;text-decoration: none;color: #FFF;color: #000;}';
+  $css.=' #tab .shadow{background-color: #929292;color: #FFF;}';
+  $css.=' #tab{width: 100%;display: table;}';
+  $css.=' #tab div{display: table-row;}';
+  return '<HTML><HEAD><TITLE>'.htmlspecialchars($title).'</TITLE><STYLE>'.$css.'</STYLE></HEAD><BODY><TABLE id="container"border="0"><TR><TD><DIV id="body">'.$body.'</DIV></TD></TR></TABLE></BODY></HTML>';
 }
 function form($title,$action,$body,$submit)
 {
   $action = $action=='signup'?'signup':'login';
   $title = strlen($title)>0?('<TR><TD colspan="2">'.htmlspecialchars($title).'</TD></TR>'):'';
-  return '<FORM action="index.php" method="post"><TABLE>'.$title.$body.'<TR><TD colspan="2"><INPUT type="hidden" name="action" value="'.$action.'"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
+  return '<FORM action="index.php" method="post"><TABLE>'.$title.$body.'<TR><TD colspan="2"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
 }
 function signUpForm()
 {
@@ -98,21 +108,28 @@ function signUpForm()
   }
   $body.='<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DATE_BORN].'</TD><TD><SELECT name="day">'.$day.'</SELECT><SELECT name="month">'.$month.'</SELECT><SELECT name="year">'.$year.'</SELECT></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][LOCATION].'</TD><TD><INPUT type="text" name="location"></TD></TR>';
-  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][LOCATION].'</TD><TD><INPUT type="text" name="location"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][STATUS].'</TD><TD><INPUT type="text" name="status"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EDUCATION].'</TD><TD><INPUT type="text" name="education"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EXPIRIENCE].'</TD><TD><INPUT type="text" name="expirience"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EMAIL].'</TD><TD><INPUT type="text" name="email"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PHONE].'</TD><TD><INPUT type="text" name=phone"></TD></TR>';
-  $body.= '<TR><TD colspan="2">'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DESCRIPTION].'<BR><TEXTAREA name="location"></TEXTAREA></TD></TR>';
+  $body.= '<TR><TD colspan="2">'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DESCRIPTION].'<BR><TEXTAREA name="location" rows="8"></TEXTAREA></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][NEW_PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD_VERIFY].'</TD><TD><INPUT type="password" name="password_verify"></TD></TR>';
   return form($GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP],'signup',$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_BUTTON]);
 }
-function logInForm() {
+function logInForm()
+{
   $body = '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EMAIL].'</TD><TD><INPUT type="text" name="email"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
   return form(null,'login',$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][LOGIN_BUTTON]);
 }
+function tabForm()
+{
+  $signup = $_GET['view']=='signup'?'active':'shadow';
+  $login = $_GET['view']!='signup'?'active':'shadow';
+  return '<DIV id="tab" border=1><DIV><A class="'.$signup.'" href="index.php?view=signup">'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_TITLE]).'</A><A class="'.$login.'" href="index.php?view=login">'.htmlspecialchars($GLOBALS[LOCALE][$GLOBALS[LANG]][LOGIN]).'</A></DIV></DIV>';
+}
+$_GET['view']=='signup'?print(htmlPage($GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_TITLE],tabForm().signUpForm())):print(htmlPage($GLOBALS[LOCALE][$GLOBALS[LANG]][LOGIN],tabForm().logInForm()));
 ob_flush();
 ?>
