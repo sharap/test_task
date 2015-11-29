@@ -109,5 +109,10 @@ function signUpForm()
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD_VERIFY].'</TD><TD><INPUT type="password" name="password_verify"></TD></TR>';
   return form($GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP],'signup',$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_BUTTON]);
 }
+function logInForm() {
+  $body = '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EMAIL].'</TD><TD><INPUT type="text" name="email"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
+  return form(null,'login',$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][LOGIN_BUTTON]);
+}
 ob_flush();
 ?>
