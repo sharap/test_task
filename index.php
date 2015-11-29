@@ -24,10 +24,12 @@ $GLOBALS[LOCALE][RU][PHONE] = 'Номер телефона:';
 $GLOBALS[LOCALE][EN][PHONE] = 'Phone number:';
 $GLOBALS[LOCALE][RU][DESCRIPTION] = 'Немного о себе:';
 $GLOBALS[LOCALE][EN][DESCRIPTION] = 'A little about yourself:';
-$GLOBALS[LOCALE][RU][PASSWORD] = 'Новый пароль:';
-$GLOBALS[LOCALE][EN][PASSWORD] = 'New password:';
+$GLOBALS[LOCALE][RU][NEW_PASSWORD] = 'Новый пароль:';
+$GLOBALS[LOCALE][EN][NEW_PASSWORD] = 'New password:';
 $GLOBALS[LOCALE][RU][PASSWORD_VERIFY] = 'Повторите пароль:';
 $GLOBALS[LOCALE][EN][PASSWORD_VERIFY] = 'Verify password:';
+$GLOBALS[LOCALE][RU][PASSWORD] = 'Пароль:';
+$GLOBALS[LOCALE][EN][PASSWORD] = 'Password:';
 $GLOBALS[LOCALE][RU][MONTH][1] = 'Январь';
 $GLOBALS[LOCALE][EN][MONTH][1] = 'January';
 $GLOBALS[LOCALE][RU][MONTH][2] = 'Февраль';
@@ -76,7 +78,8 @@ function htmlPage($title,$body)
 function form($title,$action,$body,$submit)
 {
   $action = $action=='signup'?'signup':'login';
-  return '<FORM action="index.php" method="post"><TABLE><TR><TD colspan="2">'.htmlspecialchars($title).'</TD></TR>'.$body.'<TR><TD colspan="2"><INPUT type="hidden" name="action" value="'.$action.'"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
+  $title = strlen($title)>0?('<TR><TD colspan="2">'.htmlspecialchars($title).'</TD></TR>'):'';
+  return '<FORM action="index.php" method="post"><TABLE>'.$title.$body.'<TR><TD colspan="2"><INPUT type="hidden" name="action" value="'.$action.'"><INPUT type="submit" value="'.htmlspecialchars($submit).'"></TD></TR></TABLE></FORM>';
 }
 function signUpForm()
 {
@@ -102,9 +105,9 @@ function signUpForm()
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][EMAIL].'</TD><TD><INPUT type="text" name="email"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PHONE].'</TD><TD><INPUT type="text" name=phone"></TD></TR>';
   $body.= '<TR><TD colspan="2">'.$GLOBALS[LOCALE][$GLOBALS[LANG]][DESCRIPTION].'<BR><TEXTAREA name="location"></TEXTAREA></TD></TR>';
-  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
+  $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][NEW_PASSWORD].'</TD><TD><INPUT type="password" name="password"></TD></TR>';
   $body.= '<TR><TD>'.$GLOBALS[LOCALE][$GLOBALS[LANG]][PASSWORD_VERIFY].'</TD><TD><INPUT type="password" name="password_verify"></TD></TR>';
-  return form($GLOBALS[$GLOBALS[LANG]][SIGNUP_TITLE],$GLOBALS[$GLOBALS[LANG]][SIGNUP],$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_BUTTON]);
+  return form($GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP],'signup',$body,$GLOBALS[LOCALE][$GLOBALS[LANG]][SIGNUP_BUTTON]);
 }
 ob_flush();
 ?>
