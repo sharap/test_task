@@ -414,7 +414,7 @@ if($db!=false)
 {
   $page = errorServer();
 }
+ob_clean();
 print(htmlPage($title,$page));
-print_r($_COOKIE);
-ob_flush();
+ob_end_flush();
 ?>
